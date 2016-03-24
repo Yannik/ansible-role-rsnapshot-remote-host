@@ -18,6 +18,15 @@
   fetch: src=/home/backuppuller/.ssh/id_rsa.pub dest=tmp-rsnapshot-ssh-key fail_on_missing=yes flat=yes
   delegate_to: n54l
   changed_when: False
+  when: testing is not defined
+
+- name: Create ssh key for testing
+  copy:
+    content: "ssh-rsa AAAA== test@example.org"
+    dest: ./tmp-rsnapshot-ssh-key
+  delegate_to: 127.0.0.1
+  changed_when: False
+  when: testing is defined
 
 - name: Add key to authorized_keys
   authorized_key:
