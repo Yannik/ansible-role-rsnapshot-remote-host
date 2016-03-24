@@ -1,0 +1,47 @@
+- name: Ensure rsync is installed
+  apt: name=rsync state=present
+
+- name: Ensure backupro user exists
+  user: name=backupro
+
+- name: Create ssh directory
+  file: name=/home/backupro/.ssh state=directory owner=backupro group=backupro
+
+# This doesn't work in ansible >2.0, as it uses agent forwarding (security risk!)
+#- name: Copy ssh key of backup pulling host
+#  synchronize:
+#    src: /test
+#    dest: /test
+#  delegate_to: n54l
+
+- name: Fetch ssh key from backup pulling host
+  fetch: src=/home/backuppuller/.ssh/id_rsa.pub dest=tmp-rsnapshot-ssh-key fail_on_missing=yes flat=yes
+  delegate_to: n54l
+  changed_when: False
+
+- name: Add key to authorized_keys
+  authorized_key:
+    user: backupro
+    key: "{{ lookup('file', 'tmp-rsnapshot-ssh-key') }}"
+    key_options: 'command="sudo /usr/local/bin/rrsync -ro /",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding'
+
+- name: Remove ssh key from local host
+  sudo: no
+  local_action: file state=absent path=tmp-rsnapshot-ssh-key
+  changed_when: False
+
+- name: Install rrsync
+  template: src=rrsync dest=/usr/local/bin/rrsync mode=755 owner=root group=root
+
+- name: Make sure /var/log/rrsync.log is created with correct permissions
+  copy: content="" dest=/var/log/rrsync.log mode=600 owner=root group=root force=no
+
+- name: Add sudoers config
+  blockinfile:
+    dest: /etc/sudoers
+    block: |
+      backupro ALL=NOPASSWD: /usr/local/bin/rrsync
+      Defaults!/usr/local/bin/rrsync env_keep+="SSH_ORIGINAL_COMMAND SSH_CONNECTION"
+    marker: "# {mark} rsnapshot-remote-host sudoers settings"
+    validate: 'visudo -cf %s'
+
