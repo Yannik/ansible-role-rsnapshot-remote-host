@@ -32,7 +32,7 @@
   authorized_key:
     user: backupro
     key: "{{ lookup('file', 'tmp-rsnapshot-ssh-key') }}"
-    key_options: 'command="sudo /usr/local/bin/rrsync -ro /",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding'
+    key_options: 'command="/home/backupro/.ssh/command-wrapper.sh",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding'
 
 - name: Remove ssh key from local host
   sudo: no
@@ -50,7 +50,13 @@
     dest: /etc/sudoers
     block: |
       backupro ALL=NOPASSWD: /usr/local/bin/rrsync
+      backupro ALL=NOPASSWD: /etc/rsnapshot/backup-scripts/
       Defaults!/usr/local/bin/rrsync env_keep+="SSH_ORIGINAL_COMMAND SSH_CONNECTION"
     marker: "# {mark} rsnapshot-remote-host sudoers settings"
     validate: 'visudo -cf %s'
 
+- name: Install ssh wrapper script
+  template: src=command-wrapper.sh dest=/home/backupro/.ssh/command-wrapper.sh owner=root group=root mode=655
+
+- name: Install backup-scripts
+  copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root group=root mode=755
