@@ -1,4 +1,4 @@
-Role Name
+Description
 =========
 [![Build Status](https://travis-ci.org/Yannik/ansible-role-rsnapshot-remote-host.svg?branch=master)](https://travis-ci.org/Yannik/ansible-role-rsnapshot-remote-host)
 
