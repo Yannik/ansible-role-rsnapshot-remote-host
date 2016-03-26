@@ -5,3 +5,4 @@
     - ansible-role-rsnapshot-remote-host
   vars:
     testing: True
+    rsnapshot_backup_host: example.org
