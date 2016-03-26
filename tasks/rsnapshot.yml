@@ -44,6 +44,7 @@
     name: "{{ ansible_host }}"
     key: "{{ ansible_host + ',' + ansible_fqdn + ',' + ansible_all_ipv4_addresses|join(',') + ',' + ansible_all_ipv6_addresses|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key') }}"
   delegate_to: n54l
+  when: testing is not defined
 
 - name: Remove temporary files from local host
   sudo: no
