@@ -28,6 +28,7 @@ cd /var/rsnapshot-backup/
 chmod -R 700 .
 umask 077
 
+# Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
 mysqldump ${defaults_extra_file} --all-databases --lock-tables --routines --events --triggers --force ${mysqldump_params} > mysqldump.sql
 rm -f mysqldump.sql.gz
 gzip mysqldump.sql
