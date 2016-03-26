@@ -16,7 +16,7 @@
 
 - name: Fetch ssh key from backup pulling host
   fetch: src=/home/backuppuller/.ssh/id_rsa.pub dest=tmp-rsnapshot-ssh-key fail_on_missing=yes flat=yes
-  delegate_to: n54l
+  delegate_to: "{{ rsnapshot_backup_host }}"
   changed_when: False
   when: testing is not defined
 
@@ -43,7 +43,9 @@
     path: /home/backuppuller/.ssh/known_hosts
     name: "{{ ansible_host }}"
     key: "{{ ansible_host + ',' + ansible_fqdn + ',' + ansible_all_ipv4_addresses|join(',') + ',' + ansible_all_ipv6_addresses|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key') }}"
-  delegate_to: n54l
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ rsnapshot_backup_host }}"
   when: testing is not defined
 
 - name: Remove temporary files from local host
