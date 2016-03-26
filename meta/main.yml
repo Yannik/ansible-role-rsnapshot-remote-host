@@ -1,6 +1,6 @@
 galaxy_info:
   author: Yannik Sembritzki
-  description: 
+  description: To be used in conjunction with `Yannik/rsnapshot-backup-host`.
   
   license: GPLv2
   
