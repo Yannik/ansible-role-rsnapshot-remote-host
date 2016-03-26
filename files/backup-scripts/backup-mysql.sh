@@ -25,6 +25,8 @@ done
 
 mkdir -p /var/rsnapshot-backup/
 cd /var/rsnapshot-backup/
+chmod -R 700 .
+umask 077
 
 mysqldump ${defaults_extra_file} --all-databases --lock-tables --routines --events --triggers --force ${mysqldump_params} > mysqldump.sql
 rm -f mysqldump.sql.gz
