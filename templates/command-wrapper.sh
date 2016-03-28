@@ -12,7 +12,7 @@ shopt -s extglob
 # `exec` replaces the current shell with the specified program, so
 # the shell will automatically exit after the command is executed.
 case "$SSH_ORIGINAL_COMMAND" in
-    sudo\ /etc/rsnapshot/backup-scripts/[^./]*([^/]))
+    sudo\ /etc/rsnapshot/backup-scripts/[^./]*([^/])?( *))
         exec $SSH_ORIGINAL_COMMAND
         ;;
     test)
