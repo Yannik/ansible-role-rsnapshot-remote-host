@@ -62,6 +62,7 @@
 - name: Make sure /var/log/rrsync.log is created with correct permissions
   copy: content="" dest=/var/log/rrsync.log mode=600 owner=root group=root force=no
 
+# You can list the sudoers config for the backupro user like this: `sudo -U backupro -l`
 - name: Add sudoers config
   blockinfile:
     dest: /etc/sudoers
