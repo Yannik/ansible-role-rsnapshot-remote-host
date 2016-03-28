@@ -1,8 +1,9 @@
 #!/bin/bash
 # Security check: https://security.stackexchange.com/questions/118688/
 shopt -s extglob
+set -o noglob
 
-# Use exec to run the commands.
+# Use exec to run the commands. (see https://unix.stackexchange.com/questions/270929/use-case-practical-example-for-bash-builtin-exec)
 # `exec echo a && echo b`
 # or
 # `exec echo a; echo b`
