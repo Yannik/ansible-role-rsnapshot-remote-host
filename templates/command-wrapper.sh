@@ -1,6 +1,6 @@
 #!/bin/bash
-
-# Source: http://binblog.info/2008/10/20/openssh-going-flexible-with-forced-commands/
+# Security check: https://security.stackexchange.com/questions/118688/
+shopt -s extglob
 
 # Use exec to run the commands.
 # `exec echo a && echo b`
@@ -10,7 +10,7 @@
 # `exec` replaces the current shell with the specified program, so
 # the shell will automatically exit after the command is executed.
 case "$SSH_ORIGINAL_COMMAND" in
-    sudo\ /etc/rsnapshot/backup-scripts/*)
+    sudo\ /etc/rsnapshot/backup-scripts/[^./]*([^/]))
         exec $SSH_ORIGINAL_COMMAND
         ;;
     test)
