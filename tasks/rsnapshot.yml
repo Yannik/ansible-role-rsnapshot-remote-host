@@ -42,7 +42,7 @@
   known_hosts:
     path: /home/backuppuller/.ssh/known_hosts
     name: "{{ ansible_host }}"
-    key: "{{ ([ansible_host,ansible_fqdn] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses)|unique|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key') }}"
+    key: "{{ ([ansible_host,ansible_fqdn] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses)|unique|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key')|split(' ')|slice(2)|first|join(' ') }}"
   delegate_to: "{{ item }}"
   with_items:
     - "{{ rsnapshot_backup_host }}"
