@@ -1,0 +1,2 @@
+rsnapshot_ssh_server_package: openssh-server
+rsnapshot_ssh_server_service: sshd

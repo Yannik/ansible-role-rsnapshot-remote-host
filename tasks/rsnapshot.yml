@@ -1,6 +1,14 @@
 - name: Ensure rsync is installed
   package: name=rsync state=present
 
+- name: Ensure ssh server is installed
+  package: name={{ rsnapshot_ssh_server_package }} state=present
+  register: rsnapshot_ssh_server_installed
+
+- name: Ensure ssh server service is enabled
+  service: name={{ rsnapshot_ssh_server_service }} state=started enabled=yes
+  register: rsnapshot_ssh_server_enabled
+
 - name: Ensure backupro user exists
   user: name=backupro
 
@@ -78,3 +86,7 @@
 
 - name: Install backup-scripts
   copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root group=root mode=755
+
+- name: Print ssh server warning message
+  debug: msg="=== The ssh server just got enabled, make sure it is configured correctly!! (Disable password authentication!) ==="
+  when: rsnapshot_ssh_server_installed|changed or rsnapshot_ssh_server_enabled|changed
