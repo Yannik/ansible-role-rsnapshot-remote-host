@@ -9,8 +9,11 @@
   service: name={{ rsnapshot_ssh_server_service }} state=started enabled=yes
   register: rsnapshot_ssh_server_enabled
 
+# The forced command is run through a shell, so we can't set a /sbin/nologin shell.
+# Using /bin/sh does however disable any bashis'ms or a global bashrc which may
+# not be setup for tty-less connections.
 - name: Ensure backupro user exists
-  user: name=backupro
+  user: name=backupro shell=/bin/sh
 
 - name: Create ssh directory
   file: name=/home/backupro/.ssh state=directory owner=backupro group=backupro
