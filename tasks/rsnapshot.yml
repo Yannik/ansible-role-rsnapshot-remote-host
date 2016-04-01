@@ -1,5 +1,5 @@
 - name: Ensure rsync is installed
-  apt: name=rsync state=present
+  package: name=rsync state=present
 
 - name: Ensure backupro user exists
   user: name=backupro
