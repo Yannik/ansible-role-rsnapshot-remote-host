@@ -1,5 +1,8 @@
-- name: Ensure rsync is installed
-  package: name=rsync state=present
+- name: Ensure rsync and sudo packages are installed
+  package: name={{ item }} state=present
+  with_items:
+    - rsync
+    - sudo
 
 - name: Ensure ssh server is installed
   package: name={{ rsnapshot_ssh_server_package }} state=present
@@ -60,8 +63,8 @@
   when: testing is not defined
 
 - name: Remove temporary files from local host
-  sudo: no
   local_action: file state=absent path={{ item }}
+  become: no
   with_items:
     - tmp-rsnapshot-host-key
     - tmp-rsnapshot-ssh-key
