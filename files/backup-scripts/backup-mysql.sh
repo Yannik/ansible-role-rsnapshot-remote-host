@@ -3,12 +3,14 @@
 set -o errexit
 
 mysqldump_params=""
+mysql_params=""
 defaults_extra_file=""
 
 while getopts ":u:d:" opt; do
   case $opt in
     u)
       mysqldump_params="${mysqldump_params}--user ${OPTARG} "
+      mysql_params="${mysql_params}--user ${OPTARG} "
       ;;
     d)
       defaults_extra_file="--defaults-extra-file=${OPTARG}"
@@ -28,7 +30,13 @@ cd /var/rsnapshot-backup/
 chmod -R 700 .
 umask 077
 
-# Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
-mysqldump ${defaults_extra_file} --all-databases --lock-tables --routines --events --triggers --force ${mysqldump_params} > mysqldump.sql
-rm -f mysqldump.sql.gz
-gzip mysqldump.sql
+databases=$(mysql ${defaults_extra_file} ${mysql_params} -e "SHOW DATABASES" --batch --skip-column-names |
+            grep -Ev "(information_schema|performance_schema)")
+
+for db in $databases; do
+  # Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
+  mysqldump ${defaults_extra_file} --lock-tables --routines --events --triggers --force ${mysqldump_params} --databases $db > mysqldump-${db}.sql
+  rm -rf mysqldump-${db}.sql.gz
+  gzip mysqldump-${db}.sql
+done
+
