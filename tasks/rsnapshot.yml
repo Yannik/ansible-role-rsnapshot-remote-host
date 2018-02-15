@@ -49,7 +49,7 @@
     key_options: 'command="/home/backupro/.ssh/command-wrapper.sh",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding'
 
 - name: Fetch ssh hostkey
-  fetch: src=/etc/ssh/ssh_host_ecdsa_key.pub dest=tmp-rsnapshot-host-key fail_on_missing=yes flat=yes
+  fetch: src={{ rsnapshot_ssh_hostkey }} dest=tmp-rsnapshot-host-key fail_on_missing=yes flat=yes
   changed_when: False
 
 - name: Install hostkey on backup pulling host

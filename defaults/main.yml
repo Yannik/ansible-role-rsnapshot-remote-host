@@ -1,2 +1,3 @@
 rsnapshot_ssh_server_package: openssh-server
 rsnapshot_ssh_server_service: ssh
+rsnapshot_ssh_hostkey: /etc/ssh/ssh_host_ecdsa_key.pub
