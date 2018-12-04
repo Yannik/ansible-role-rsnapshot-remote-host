@@ -3,7 +3,7 @@ from ansible import errors
 def split(string, char):
     try:
         return string.split(char)
-    except Exception, e:
+    except Exception as e:
         raise errors.AnsibleFilterError('split plugin error: %s' % str(e) )
 
 def do_slice(value, items_per_slice):
