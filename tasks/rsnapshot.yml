@@ -95,4 +95,4 @@
 
 - name: Print ssh server warning message
   pause: prompt="The ssh server just got enabled, make sure it is configured correctly!! (Disable password authentication!). Press enter to continue"
-  when: rsnapshot_ssh_server_installed|changed or rsnapshot_ssh_server_enabled|changed
+  when: rsnapshot_ssh_server_installed is changed or rsnapshot_ssh_server_enabled is changed
