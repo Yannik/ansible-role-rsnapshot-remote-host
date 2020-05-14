@@ -15,7 +15,7 @@
 # Using /bin/sh does however disable any bashis'ms or a global bashrc which may
 # not be setup for tty-less connections.
 - name: Ensure backupro user exists
-  user: name=backupro group={{ rsnapshot_backupro_group|default('backupro') }} shell=/bin/sh
+  user: name=backupro group={{ rsnapshot_backupro_group|default(omit) }} shell=/bin/sh
 
 - name: Create ssh directory
   file:
