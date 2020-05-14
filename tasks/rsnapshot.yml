@@ -4,6 +4,7 @@
     - rsync
     - sudo
     - "{{ rsnapshot_ssh_server_package }}"
+  register: rsnapshot_ssh_server_installed
   when: ansible_distribution != "MacOSX"
 
 - name: Ensure ssh server service is enabled
@@ -95,6 +96,10 @@
 
 - name: Install backup-scripts
   copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root mode=755
+
+- name: Install custom backup-scripts
+  copy: src={{ rsnapshot_backupscripts_path }} dest=/etc/rsnapshot/ owner=root mode=755
+  when: rsnapshot_backupscripts_path is defined
 
 - name: Print ssh server warning message
   pause: prompt="The ssh server just got enabled, make sure it is configured correctly!! (Disable password authentication!). Press enter to continue"
