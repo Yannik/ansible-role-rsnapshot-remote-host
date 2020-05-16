@@ -1,3 +1,10 @@
+- name: Ensure ssh server packag is installed
+  package: name={{ item }} state=present
+  with_items:
+    - "{{ rsnapshot_ssh_server_package }}"
+  register: rsnapshot_ssh_server_installed
+  when: ansible_distribution != "MacOSX"
+
 - name: Ensure rsync and sudo, and ssh server packages are installed
   package: name={{ item }} state=present
   with_items:
