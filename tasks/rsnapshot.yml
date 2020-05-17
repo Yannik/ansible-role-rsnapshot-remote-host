@@ -1,4 +1,4 @@
-- name: Ensure ssh server packag is installed
+- name: Ensure ssh server package is installed
   package: name={{ item }} state=present
   with_items:
     - "{{ rsnapshot_ssh_server_package }}"
@@ -103,6 +103,10 @@
 
 - name: Install backup-scripts
   copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root mode=755
+
+- name: Install custom backup-scripts
+  copy: src={{ rsnapshot_backupscripts_path }} dest=/etc/rsnapshot/ owner=root mode=755
+  when: rsnapshot_backupscripts_path is defined
 
 - name: Print ssh server warning message
   pause: prompt="The ssh server just got enabled, make sure it is configured correctly!! (Disable password authentication!). Press enter to continue"
