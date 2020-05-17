@@ -18,6 +18,6 @@ case "$SSH_ORIGINAL_COMMAND" in
     test)
         ;;
     *)
-        exec sudo /usr/local/bin/rrsync -ro /
+        exec sudo -u {{ rsnapshot_root_user }} {{ rsnapshot_rrsync_path }}/rrsync -ro /
         ;;
 esac

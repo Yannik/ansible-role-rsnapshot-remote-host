@@ -26,7 +26,7 @@
 
 - name: Create ssh directory
   file:
-    name: "{{ rsnapshot_home_dir|default('/home') }}/backupro/.ssh"
+    name: "{{ rsnapshot_home_dir }}/backupro/.ssh"
     state: directory
     owner: backupro
     group: "{{ rsnapshot_backupro_group|default('backupro') }}"
@@ -56,7 +56,7 @@
   authorized_key:
     user: backupro
     key: "{{ lookup('file', 'tmp-rsnapshot-ssh-key') }}"
-    key_options: "command=\"{{ rsnapshot_home_dir|default('/home') }}/backupro/.ssh/command-wrapper.sh\",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding"
+    key_options: "command=\"{{ rsnapshot_home_dir }}/backupro/.ssh/command-wrapper.sh\",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding"
 
 - name: Fetch ssh hostkey
   fetch: src={{ rsnapshot_ssh_hostkey }} dest=tmp-rsnapshot-host-key fail_on_missing=yes flat=yes
@@ -81,24 +81,25 @@
   changed_when: False
 
 - name: Install rrsync
-  template: src=rrsync dest=/usr/local/bin/rrsync mode=755 owner=root
+  template: src=rrsync dest="{{ rsnapshot_rrsync_path }}/rrsync" mode=755 owner={{ rsnapshot_root_user }}
 
 - name: Make sure /var/log/rrsync.log is created with correct permissions
-  copy: content="" dest=/var/log/rrsync.log mode=600 owner=root force=no
+  copy: content="" dest=/var/log/rrsync.log mode=600 owner={{ rsnapshot_root_user }} force=no
 
 # You can list the sudoers config for the backupro user like this: `sudo -U backupro -l`
 - name: Add sudoers config
   blockinfile:
-    dest: /etc/sudoers
+    dest: "{{ rsnapshot_sudoers_path }}"
     block: |
-      backupro ALL=NOPASSWD: /usr/local/bin/rrsync
-      backupro ALL=NOPASSWD: /etc/rsnapshot/backup-scripts/
-      Defaults!/usr/local/bin/rrsync env_keep+="SSH_ORIGINAL_COMMAND SSH_CONNECTION"
+      backupro ALL=({{ rsnapshot_root_user }}) NOPASSWD: {{ rsnapshot_rrsync_path }}/rrsync
+      backupro ALL=({{ rsnapshot_root_user }}) NOPASSWD: /etc/rsnapshot/backup-scripts/
+      Defaults!{{ rsnapshot_rrsync_path }}/rrsync env_keep+="SSH_ORIGINAL_COMMAND SSH_CONNECTION"
+    create: yes
     marker: "# {mark} rsnapshot-remote-host sudoers settings"
     validate: 'visudo -cf %s'
 
 - name: Install ssh wrapper script
-  template: src=command-wrapper.sh dest={{ rsnapshot_home_dir|default('/home') }}/backupro/.ssh/command-wrapper.sh owner=root mode=655
+  template: src=command-wrapper.sh dest={{ rsnapshot_home_dir }}/backupro/.ssh/command-wrapper.sh owner={{ rsnapshot_root_user }} mode=655
 
 - name: Install backup-scripts
   copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root mode=755
