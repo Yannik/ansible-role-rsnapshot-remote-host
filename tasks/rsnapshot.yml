@@ -10,7 +10,6 @@
   with_items:
     - rsync
     - sudo
-    - "{{ rsnapshot_ssh_server_package }}"
   when: ansible_distribution != "MacOSX"
 
 - name: Ensure ssh server service is enabled
