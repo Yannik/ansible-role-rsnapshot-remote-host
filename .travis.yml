@@ -1,9 +1,8 @@
 ---
 language: python
-python: "2.7"
 
-sudo: true
-dist: trusty
+become: true
+dist: bionic
 
 addons:
   apt:
@@ -23,11 +22,11 @@ script:
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
   # Run playbook
-  - ansible-playbook tests/test.yml -i tests/inventory --connection=local --sudo
+  - ansible-playbook tests/test.yml -i tests/inventory --connection=local --become
 
   # Run playbook again to check idempotency
   - >
-    ansible-playbook tests/test.yml -i tests/inventory --connection=local --sudo
+    ansible-playbook tests/test.yml -i tests/inventory --connection=local --become
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
