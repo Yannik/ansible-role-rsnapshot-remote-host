@@ -1,7 +1,7 @@
 rsnapshot_ssh_server_package: openssh-server
 rsnapshot_ssh_enable: true
 rsnapshot_ssh_server_service: ssh
-rsnapshot_ssh_hostkey: /etc/ssh/ssh_host_ecdsa_key.pub
+rsnapshot_ssh_hostkey: /etc/ssh/ssh_host_ed25519_key.pub
 rsnapshot_root_user: root
 rsnapshot_home_dir: /home
 rsnapshot_rrsync_path: /usr/local/bin
