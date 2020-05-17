@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit
+set -o nounset
 
 mysqldump_params=""
 mysql_params=""
@@ -25,10 +26,9 @@ while getopts ":u:d:" opt; do
   esac
 done
 
-mkdir -p /var/rsnapshot-backup/
-cd /var/rsnapshot-backup/
-chmod -R 700 .
-umask 077
+. /etc/rsnapshot/backup-scripts/common.sh
+
+create_backup_dir
 
 databases=$(mysql ${defaults_extra_file} ${mysql_params} -e "SHOW DATABASES" --batch --skip-column-names |
             grep -Ev "(information_schema|performance_schema)")
