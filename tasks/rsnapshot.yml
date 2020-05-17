@@ -103,7 +103,7 @@
   template: src=command-wrapper.sh dest={{ rsnapshot_home_dir }}/backupro/.ssh/command-wrapper.sh owner={{ rsnapshot_root_user }} mode=655
 
 - name: Install backup-scripts
-  copy: src=backup-scripts dest=/etc/rsnapshot/ owner=root mode=755
+  copy: src=backup-scripts dest=/etc/rsnapshot/ owner={{ rsnapshot_root_user }} mode=755
 
 - name: Install custom backup-scripts
   copy: src={{ rsnapshot_backupscripts_path }} dest=/etc/rsnapshot/ owner=root mode=755
