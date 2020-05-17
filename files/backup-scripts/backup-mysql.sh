@@ -37,6 +37,6 @@ for db in $databases; do
   # Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
   mysqldump ${defaults_extra_file} --lock-tables --routines --events --triggers --force ${mysqldump_params} --databases $db > mysqldump-${db}.sql
   rm -rf mysqldump-${db}.sql.gz
-  gzip mysqldump-${db}.sql
+  gzip --rsyncable mysqldump-${db}.sql
 done
 
