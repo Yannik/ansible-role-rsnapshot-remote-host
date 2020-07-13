@@ -40,7 +40,7 @@ fi
 
 lvcreate --snapshot --name backup_snapshot --permission r -l "$size" "$volume"
 
-volumegroup=$(echo "$volume" | cut -d "/" -f1)
+volumegroup=$(echo "$volume" | cut -d "/" -f1 | sed 's/-/--/g')
 
 mkdir -p "$BACKUP_DIR/snapshot"
 mount -o ro /dev/mapper/$volumegroup-backup_snapshot "$BACKUP_DIR/snapshot"
