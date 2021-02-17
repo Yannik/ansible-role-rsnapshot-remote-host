@@ -22,6 +22,7 @@
 # not be setup for tty-less connections.
 - name: Ensure backupro user exists
   user: name=backupro group={{ rsnapshot_backupro_group|default(omit) }} shell=/bin/sh
+  when: rsnapshot_create_user
 
 - name: Create ssh directory
   file:
