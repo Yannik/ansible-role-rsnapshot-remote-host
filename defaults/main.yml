@@ -1,3 +1,4 @@
+rsnapshot_install_packages: true
 rsnapshot_ssh_server_package: openssh-server
 rsnapshot_ssh_enable: true
 rsnapshot_ssh_server_service: ssh

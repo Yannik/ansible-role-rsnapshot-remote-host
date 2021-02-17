@@ -3,20 +3,19 @@
   with_items:
     - "{{ rsnapshot_ssh_server_package }}"
   register: rsnapshot_ssh_server_installed
-  when: ansible_distribution != "MacOSX"
+  when: rsnapshot_install_packages
 
-- name: Ensure rsync and sudo, and ssh server packages are installed
+- name: Ensure rsync and sudo are installed
   package: name={{ item }} state=present
   with_items:
     - rsync
     - sudo
-  when: ansible_distribution != "MacOSX"
+  when: rsnapshot_install_packages
 
 - name: Ensure ssh server service is enabled
   service: name={{ rsnapshot_ssh_server_service }} state=started enabled=yes
   register: rsnapshot_ssh_server_enabled
-  when: ansible_distribution != "MacOSX"
-        and rsnapshot_ssh_enable
+  when: rsnapshot_ssh_enable
 
 # The forced command is run through a shell, so we can't set a /sbin/nologin shell.
 # Using /bin/sh does however disable any bashis'ms or a global bashrc which may
