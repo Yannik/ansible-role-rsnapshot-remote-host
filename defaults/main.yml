@@ -8,4 +8,5 @@ rsnapshot_home_dir: /home
 rsnapshot_rrsync_path: /usr/local/bin
 rsnapshot_sudoers_path: /etc/sudoers
 rsnapshot_perl_path: /usr/bin/perl
+rsnapshot_disable_visudo: false
 rsnapshot_create_user: true

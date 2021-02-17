@@ -97,7 +97,7 @@
       Defaults!{{ rsnapshot_rrsync_path }}/rrsync env_keep+="SSH_ORIGINAL_COMMAND SSH_CONNECTION"
     create: yes
     marker: "# {mark} rsnapshot-remote-host sudoers settings"
-    validate: 'visudo -cf %s'
+    validate: "{{ 'visudo -cf %s' if not rsnapshot_disable_visudo else '' }}"
 
 - name: Install ssh wrapper script
   template: src=command-wrapper.sh dest={{ rsnapshot_home_dir }}/backupro/.ssh/command-wrapper.sh owner={{ rsnapshot_root_user }} mode=655
