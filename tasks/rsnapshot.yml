@@ -24,12 +24,21 @@
   user: name=backupro group={{ rsnapshot_backupro_group|default(omit) }} shell=/bin/sh
   when: rsnapshot_create_user
 
+- name: Ensure home folder has correct permissions (0700)
+  file:
+    name: "{{ rsnapshot_home_dir }}/backupro"
+    state: directory
+    owner: backupro
+    group: "{{ rsnapshot_backupro_group|default('backupro') }}"
+    mode: 0700
+
 - name: Create ssh directory
   file:
     name: "{{ rsnapshot_home_dir }}/backupro/.ssh"
     state: directory
     owner: backupro
     group: "{{ rsnapshot_backupro_group|default('backupro') }}"
+    mode: 0700
 
 # This doesn't work in ansible >2.0, as it uses agent forwarding (security risk!)
 #- name: Copy ssh key of backup pulling host
