@@ -28,7 +28,7 @@ databases=$(sudo -i -u gitlab-psql -- /opt/gitlab/embedded/bin/psql \
             grep -Ev "(postgres|template0|template1)")
 
 for db in $databases; do
-  if [ ! -z "${only_database:-}" ] && [ "$db" != "$only_database"]; then
+  if [ ! -z "${only_database:-}" ] && [ "$db" != "$only_database" ]; then
     continue
   fi
   sudo -i -u gitlab-psql -- \
