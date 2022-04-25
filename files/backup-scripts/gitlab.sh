@@ -24,4 +24,7 @@ done
 
 create_backup_dir
 
+# Remove old backup
+rm -rf /var/backup/gitlab/*
+
 /opt/gitlab/bin/gitlab-backup create SKIP="$skip" GZIP_RSYNCABLE=yes CRON=1
