@@ -75,8 +75,8 @@
 - name: Install hostkey on backup pulling host
   known_hosts:
     path: /home/backuppuller/.ssh/known_hosts
-    name: "{{ ansible_host }}"
-    key: "{{ ([ansible_host,ansible_fqdn] + [rsnapshot_external_hostname|default(ansible_host)]|default([], True) + ansible_all_ipv4_addresses|ipaddr('public')|default([], True) + ansible_all_ipv6_addresses|ipaddr('public')|default([], True))|unique|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key')|split(' ')|slice2(2)|first|join(' ') }}"
+    name: "{{ rsnapshot_external_hostname|default(ansible_host) }}"
+    key: "{{ ([ansible_host,ansible_fqdn] + [rsnapshot_external_hostname|default(ansible_host)]|default([], True) + ansible_all_ipv4_addresses|ansible.utils.ipaddr('public')|default([], True) + ansible_all_ipv6_addresses|ansible.utils.ipaddr('public')|default([], True))|unique|join(',') + ' ' + lookup('file', 'tmp-rsnapshot-host-key')|split(' ')|slice2(2)|first|join(' ') }}"
   delegate_to: "{{ item }}"
   with_items:
     - "{{ rsnapshot_backup_host }}"
