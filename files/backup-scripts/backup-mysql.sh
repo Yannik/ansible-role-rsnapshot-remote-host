@@ -34,8 +34,17 @@ databases=$(mysql ${defaults_extra_file} ${mysql_params} -e "SHOW DATABASES" --b
             grep -Ev "(information_schema|performance_schema)")
 
 for db in $databases; do
+  non_innodb_tables=$(mysql -e "SELECT TABLE_NAME,ENGINE FROM information_schema.tables WHERE table_schema = DATABASE() AND ENGINE != 'InnoDB';" --batch --skip-column-names "$db")
+  if [ "$non_innodb_tables" == "" ]; then
+    mysqldump_params="${mysqldump_params}--single-transaction "
+  else
+    echo "Failure to backup database $db using --single-transaction due to MyISAM tables: "
+    echo "$non_innodb_tables"
+    mysqldump_params="${mysqldump_params}--lock-tables "
+  fi
+
   # Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
-  mysqldump ${defaults_extra_file} --lock-tables --routines --events --triggers --force ${mysqldump_params} --databases $db > mysqldump-${db}.sql
+  mysqldump ${defaults_extra_file} --routines --events --triggers --force ${mysqldump_params} --databases $db > mysqldump-${db}.sql
   rm -rf mysqldump-${db}.sql.gz
   gzip --rsyncable mysqldump-${db}.sql
 done
