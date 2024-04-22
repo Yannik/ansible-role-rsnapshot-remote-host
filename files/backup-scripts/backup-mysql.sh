@@ -31,7 +31,7 @@ done
 create_backup_dir
 
 databases=$(mysql ${defaults_extra_file} ${mysql_params} -e "SHOW DATABASES" --batch --skip-column-names |
-            grep -Ev "(information_schema|performance_schema)")
+            grep -Ev "^(information_schema|performance_schema|sys|mysql)$")
 
 for db in $databases; do
   non_innodb_tables=$(mysql -e "SELECT TABLE_NAME,ENGINE FROM information_schema.tables WHERE table_schema = DATABASE() AND ENGINE != 'InnoDB';" --batch --skip-column-names "$db")
