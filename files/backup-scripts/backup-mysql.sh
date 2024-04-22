@@ -43,6 +43,11 @@ for db in $databases; do
     mysqldump_params="${mysqldump_params}--lock-tables "
   fi
 
+  ignore_tables=$(mysql -e "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = DATABASE();" --batch --skip-column-names "$db" | grep -E "(^cache_|^cf_cache_)")
+  for table in $ignore_tables; do
+    mysqldump_params="${mysqldump_params}--ignore-table=$db.$table "
+  done
+
   # Source: https://dba.stackexchange.com/questions/33883/what-is-the-proper-way-to-backup-mysql-database-with-rsnapshot
   mysqldump ${defaults_extra_file} --routines --events --triggers --force ${mysqldump_params} --databases $db > mysqldump-${db}.sql
   rm -rf mysqldump-${db}.sql.gz
