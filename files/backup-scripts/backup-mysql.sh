@@ -43,7 +43,7 @@ for db in $databases; do
     mysqldump_params="${mysqldump_params}--lock-tables "
   fi
 
-  ignore_tables=$(mysql -e "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = DATABASE();" --batch --skip-column-names "$db" | grep -E "(^cache_|^cf_cache_)")
+  ignore_tables=$(mysql -e "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = DATABASE();" --batch --skip-column-names "$db" | { grep -E "(^cache_|^cf_cache_)" || test $? = 1; })
   for table in $ignore_tables; do
     mysqldump_params="${mysqldump_params}--ignore-table=$db.$table "
   done
