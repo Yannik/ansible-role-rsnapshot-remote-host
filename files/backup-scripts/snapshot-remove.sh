@@ -29,8 +29,8 @@ fi
 
 volumegroup=$(echo "$volume" | cut -d "/" -f1)
 
-if mountpoint -q "$BACKUP_DIR/snapshot"; then
-  umount "$BACKUP_DIR/snapshot"
+if mountpoint -q "/backup-snapshot"; then
+  umount "/backup-snapshot"
 fi
 lvremove -y "$volumegroup/backup_snapshot"
-rmdir "$BACKUP_DIR/snapshot"
+rmdir "/backup-snapshot"
